@@ -35,7 +35,7 @@ def updateReadme():
         filedata = file.read()    
 
     total_challenges = getChallengesCount()
-    match_string = 'Completed Challenges:'
+    match_string = '**Completed Challenges:**'
     filedata = re.sub('{}.*'.format(match_string), '{} {}'.format(match_string,total_challenges),filedata)
 
     with open(readmeFile, 'w') as file:
