@@ -1,5 +1,6 @@
 import sys
 import os
+import re
 
 challenges = None
 directory = 'challenges'
@@ -34,8 +35,7 @@ def updateReadme():
         filedata = file.read()    
 
     total_challenges = getChallengesCount()
-    print(total_challenges)
-    filedata = filedata.replace('Challenges:', 'Challenges: {}'.format(total_challenges))
+    filedata = re.sub('Completed Challenges:.*', 'Challenges: {}'.format(total_challenges),filedata)
 
     with open(readmeFile, 'w') as file:
         file.write(filedata)
