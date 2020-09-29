@@ -42,9 +42,4 @@ def updateReadme():
         file.write(filedata)
 
 if __name__ == "__main__":
-    challenges = getListOfChallenges(directory)
-
-    for challenge in challenges:
-        print(challenge)
-
     updateReadme()
