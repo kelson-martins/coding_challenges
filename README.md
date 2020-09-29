@@ -1,3 +1,1 @@
 # coding_challenges
-
-Challenges:
