@@ -1,3 +1,3 @@
 # coding_challenges
 
-Completed Challenges:
+Completed Challenges: 7
