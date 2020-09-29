@@ -2,6 +2,8 @@ name: Build README
 
 on:
   push:
+    branches:
+    - master
 
 jobs:
   build:
@@ -15,8 +17,15 @@ jobs:
       uses: actions/setup-python@v1
       with:
         python-version: 3.8
-    - name: Update README
+    - name: update README
       run: |-
         python --version
         python update_readme.py
         cat README.md
+    - name: push README if changed
+      run: |-
+        git diff
+        git config --global user.email "readme-autoupdate@km.com"
+        git config --global user.name "readme-autoupdate"
+        git diff --quiet || (git add README.md && git commit -m "README autoupdate")
+        git push        

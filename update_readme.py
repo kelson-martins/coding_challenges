@@ -1,21 +1,49 @@
 import sys
 import os
 
-def getListOfFiles(dirName):
+challenges = None
+directory = 'challenges'
 
-    listOfFile = os.listdir(dirName)
-    allFiles = list()
-    for entry in listOfFile:
+def getListOfChallenges(dirName):
+
+    listOfChallenges = os.listdir(dirName)
+    allChallenges = list()
+    for entry in listOfChallenges:
         fullPath = os.path.join(dirName, entry)
         if os.path.isdir(fullPath):
-            allFiles = allFiles + getListOfFiles(fullPath)
+            allChallenges = allChallenges + getListOfChallenges(fullPath)
         else:
-            allFiles.append(fullPath)        
+            if ".md" not in entry:
+                allChallenges.append(fullPath)        
                 
-    return allFiles
+    return allChallenges
+
+def getChallengesCount():
+    
+    global challenges
+
+    if challenges == None:
+        challenges = getListOfChallenges(directory)
+
+    return len(challenges)
+
+def updateReadme():
+
+    readmeFile = 'README.md'
+    with open(readmeFile, 'r') as file:
+        filedata = file.read()    
+
+    total_challenges = getChallengesCount()
+    print(total_challenges)
+    filedata = filedata.replace('Challenges:', 'Challenges: {}'.format(total_challenges))
+
+    with open(readmeFile, 'w') as file:
+        file.write(filedata)
 
 if __name__ == "__main__":
-    files = getListOfFiles('challenges')
+    challenges = getListOfChallenges(directory)
 
-    for file in files:
-        print(file)
+    for challenge in challenges:
+        print(challenge)
+
+    updateReadme()
