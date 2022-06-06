@@ -9,7 +9,7 @@ var output int
 func main() {
 
 	input = []int{1, 3}
-	target = 4
+	target = 2
 	output = 0
 
 	// fmt.Println(searchInsertIterative(input, target))
@@ -68,6 +68,11 @@ func searchRecursive(nums []int, target int, left int, right int) int {
 	if target == value {
 		return middle
 	} else if value > target {
+
+		if middle == 0 {
+			return 0
+		}
+
 		if nums[middle-1] > target {
 			right = middle - 1
 			return searchRecursive(nums, target, left, right)
@@ -77,8 +82,12 @@ func searchRecursive(nums []int, target int, left int, right int) int {
 			return middle - 1
 		}
 	} else {
+
+		if middle == len(nums)-1 {
+			return len(nums)
+		}
 		if nums[middle+1] > target {
-			return middle
+			return middle + 1
 		} else if nums[middle+1] < target {
 			left = middle + 1
 			return searchRecursive(nums, target, left, right)
