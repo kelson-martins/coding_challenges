@@ -3,7 +3,12 @@ package main
 import "fmt"
 
 func main() {
-	fmt.Println(searchRecursive([]int{-1, 0, 3, 5, 9, 12}, 9))
+	nums := []int{-1, 0, 3, 5, 9, 12}
+	target := 9
+
+	fmt.Println(search(nums, target))
+	fmt.Println(searchRecursive(nums, target))
+
 }
 
 // iterative approach

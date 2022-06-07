@@ -19,7 +19,16 @@ func main() {
 
 	input := testCases[currentTest]
 
+	fmt.Println("--- Recursive Approach ---")
 	result := firstBadVersionRecursive(input)
+	if result == testCases[expectedResult] {
+		fmt.Printf("Correct. Output: %d. Expected: %d.\n", result, testCases[expectedResult])
+	} else {
+		fmt.Printf("Failed. Output: %d. Expected: %d.\n", result, testCases[expectedResult])
+	}
+
+	fmt.Println("--- Iterative Approach ---")
+	result = firstBadVersion(input)
 	if result == testCases[expectedResult] {
 		fmt.Printf("Correct. Output: %d. Expected: %d.\n", result, testCases[expectedResult])
 	} else {

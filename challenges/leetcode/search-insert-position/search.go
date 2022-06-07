@@ -12,7 +12,7 @@ func main() {
 	target = 2
 	output = 0
 
-	// fmt.Println(searchInsertIterative(input, target))
+	fmt.Println(searchInsertIterative(input, target))
 	fmt.Println(recursiveCall(input, target))
 }
 
