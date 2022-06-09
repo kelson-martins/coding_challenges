@@ -2,13 +2,13 @@ package main
 
 import (
 	"fmt"
-	"math"
+	"sort"
 )
 
 func main() {
 
-	input := []int{3, 2, 4}
-	target := -6
+	input := []int{-3, 4, 3, 90}
+	target := 0
 
 	fmt.Println(twoSum(input, target))
 }
@@ -18,19 +18,39 @@ func twoSum(nums []int, target int) []int {
 	left := 0
 	right := len(nums) - 1
 
+	var copyNums []int
+	copyNums = append(copyNums, nums...)
+
+	sort.Ints(nums)
+
 	for {
 		if left > right {
 			break
 		}
 
-		n1 := int(math.Abs(float64(nums[left])))
-		n2 := int(math.Abs(float64(nums[right])))
+		n1 := nums[left]
+		n2 := nums[right]
 
-		newTarget := int(math.Abs(float64(target)))
+		if n1+n2 == target {
+			retN1 := -1
+			retN2 := -1
+			for i, _ := range copyNums {
+				if copyNums[i] == n1 && retN1 == -1 {
+					retN1 = i
+					continue
+				}
+				if copyNums[i] == n2 && retN2 == -1 {
+					retN2 = i
+					continue
+				}
 
-		if n1+n2 == newTarget {
-			return []int{left, right}
-		} else if n1+n2 > newTarget {
+				if retN1 != -1 && retN2 != -1 {
+					break
+				}
+			}
+
+			return []int{retN1, retN2}
+		} else if n1+n2 > target {
 			right--
 			continue
 		} else {
