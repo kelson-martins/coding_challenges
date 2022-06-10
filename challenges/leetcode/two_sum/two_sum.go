@@ -11,6 +11,38 @@ func main() {
 	target := 0
 
 	fmt.Println(twoSum(input, target))
+	fmt.Println(twoSumON(input, target))
+}
+
+func twoSumON(nums []int, target int) []int {
+
+	mapNums := make(map[int]int)
+
+	for i := 0; i < len(nums); i++ {
+
+		mapNums[nums[i]] = i
+
+	}
+
+	var v1 int
+	var v2 int
+
+	for i := 0; i < len(nums); i++ {
+
+		toCheck := target - nums[i]
+
+		_, ok := mapNums[toCheck]
+
+		if ok {
+			v1 = i
+			v2 = target - nums[i]
+		}
+
+	}
+
+	ret := []int{v1, v2}
+	return ret
+
 }
 
 func twoSum(nums []int, target int) []int {
