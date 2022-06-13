@@ -7,22 +7,21 @@ import (
 
 func main() {
 
-	input := []int{-3, 4, 3, 90}
-	target := 0
+	target := 6
+
+	input := []int{3, 2, 4}
+
+	var inputON []int
+	inputON = append(inputON, input...)
 
 	fmt.Println(twoSum(input, target))
-	fmt.Println(twoSumON(input, target))
+
+	fmt.Println(twoSumON(inputON, target))
 }
 
 func twoSumON(nums []int, target int) []int {
 
 	mapNums := make(map[int]int)
-
-	for i := 0; i < len(nums); i++ {
-
-		mapNums[nums[i]] = i
-
-	}
 
 	var v1 int
 	var v2 int
@@ -30,19 +29,17 @@ func twoSumON(nums []int, target int) []int {
 	for i := 0; i < len(nums); i++ {
 
 		toCheck := target - nums[i]
-
-		_, ok := mapNums[toCheck]
-
+		val, ok := mapNums[toCheck]
 		if ok {
-			v1 = i
-			v2 = target - nums[i]
+			v1 = val
+			v2 = i
+			return []int{v1, v2}
 		}
 
+		mapNums[nums[i]] = i
 	}
 
-	ret := []int{v1, v2}
-	return ret
-
+	return nil
 }
 
 func twoSum(nums []int, target int) []int {
