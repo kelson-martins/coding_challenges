@@ -47,3 +47,9 @@ Output: [0,1]
 **Only one valid answer exists.**
 
 ### Implementation Notes
+
+Implemented the twosums problem using 2 different approaches:
+1.  One less efficient with complexity O(n log n), in which we are first sortering the list first, then always summing the first and last elements to identify if we need to reduce or increase the sum to hit the traget.
+
+
+2. A more efficient approach in O(n) by laveraging maps.
