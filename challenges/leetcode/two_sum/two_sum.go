@@ -7,16 +7,16 @@ import (
 
 func main() {
 
-	target := 6
+	target := 17
 
-	input := []int{3, 2, 4}
+	input := []int{2, 7, 11, 15}
 
 	var inputON []int
 	inputON = append(inputON, input...)
 
 	fmt.Println(twoSum(input, target))
 
-	fmt.Println(twoSumON(inputON, target))
+	// fmt.Println(twoSumON(inputON, target))
 }
 
 func twoSumON(nums []int, target int) []int {
@@ -42,7 +42,7 @@ func twoSumON(nums []int, target int) []int {
 	return nil
 }
 
-func twoSum(nums []int, target int) []int {
+func twoSum_1(nums []int, target int) []int {
 
 	left := 0
 	right := len(nums) - 1
@@ -86,6 +86,24 @@ func twoSum(nums []int, target int) []int {
 			left++
 			continue
 		}
+	}
+
+	return []int{}
+}
+
+// 11/09/2022
+func twoSum(nums []int, target int) []int {
+
+	for i := 0; i <= len(nums); i++ {
+
+		toFind := target - nums[i]
+
+		for j := i; j <= len(nums); j++ {
+			if nums[j] == toFind {
+				return []int{i, j}
+			}
+		}
+
 	}
 
 	return []int{}
