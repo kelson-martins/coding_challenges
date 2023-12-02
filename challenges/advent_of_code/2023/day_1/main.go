@@ -3,16 +3,66 @@ package main
 import (
 	"bufio"
 	"fmt"
+	"log"
 	"os"
+	"strconv"
+	"unicode"
 )
 
 func main() {
-	f, err := readLines("/Users/kelson/drive/repository/personal/coding_challenges/challenges/advent_of_code/2023/day_1/input.txt")
-	if err != nil {
-		for k, v := range f {
-			fmt.Println(k, v)
+
+	total := 0
+
+	file, err := readLines("input.txt")
+	if err == nil {
+		for _, line := range file {
+
+			total += getLineValues(line)
+
 		}
+
 	}
+
+	log.Println("Total: ", total)
+}
+
+func getLineValues(text string) int {
+
+	start := 0
+	end := len(text) - 1
+
+	char1 := ""
+	char2 := ""
+
+	for _, character := range text {
+
+		if string(char1) == "" {
+
+			if unicode.IsNumber(character) {
+
+				char1 = string(character)
+
+			}
+		}
+
+		if string(char2) == "" {
+			if unicode.IsNumber(rune(text[end])) {
+				char2 = string(text[end])
+			}
+		}
+
+		start++
+		end--
+
+	}
+
+	combinedInt, err := strconv.Atoi(fmt.Sprintf("%v%v", char1, char2))
+	if err != nil {
+		log.Fatalln("Error converting String to Int")
+	}
+	fmt.Println(combinedInt)
+
+	return combinedInt
 }
 
 // read line by line into memory
