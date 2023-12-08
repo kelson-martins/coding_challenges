@@ -14,6 +14,7 @@ func main() {
 	file, err := readLines("input.txt")
 
 	partNumbers := []string{}
+	sequencesPerLine := map[int][][]int{}
 
 	if err == nil {
 
@@ -43,7 +44,9 @@ func main() {
 			}
 
 			// process for part numbers
-			partNumbers = append(partNumbers, processLine(linesToProcess)...)
+			parts, sequences := processLine(linesToProcess)
+			partNumbers = append(partNumbers, parts...)
+			sequencesPerLine[k] = sequences
 
 		}
 	}
@@ -63,13 +66,45 @@ func main() {
 
 	fmt.Println("sum of part numbers: ", sum)
 
+	// computing the gears
+
+	for k, line := range file {
+		findGears(line, k, sequencesPerLine)
+
+	}
+
 }
 
-func processGear(lines []string) int {
+// need to process only the first incoming line
+func findGears(line string, currentLine int, mapa map[int][][]int) {
 
-	gearNumbersSum := 0
+	for j := 0; j < len(line); j++ {
 
-	return gearNumbersSum
+		char := rune(line[j])
+
+		// find the number to start the lookup
+		if checkStar(char) {
+			numberAttachedParts := 0
+			// found star, now needs to find adjascent
+
+			// 1. check same line left
+			if j > 0 {
+				leftChar := rune(line[j-1])
+				if unicode.IsNumber(leftChar) {
+					numberAttachedParts += 1
+				}
+			}
+			// 1. check same line right
+			if j+1 < len(line) {
+				rightChar := rune(line[j+1])
+				if unicode.IsNumber(rightChar) {
+					numberAttachedParts += 1
+				}
+			}
+
+		}
+	}
+
 }
 
 func readLines(path string) ([]string, error) {
@@ -88,9 +123,10 @@ func readLines(path string) ([]string, error) {
 }
 
 // process 2 or 3 lines at a time
-func processLine(lines []string) []string {
+func processLine(lines []string) ([]string, [][]int) {
 
 	partNumbers := []string{}
+	numberSequences := [][]int{}
 
 	for _, line := range lines {
 
@@ -127,6 +163,9 @@ func processLine(lines []string) []string {
 
 				// once here it means we found the ending number sequence
 				// now check if they are part numbers
+				// also check gears
+
+				foundPart := false // if found any single adjacente, move to true to avoid adding multiple parts inc count
 
 				// check first the left most character
 				hasLeftChar := startSequence-1 >= 0
@@ -135,10 +174,11 @@ func processLine(lines []string) []string {
 					if checkSymbol(leftChar) {
 						fmt.Println("Sequence for left char", startSequence, endSequence)
 
-						// TODO maybe error
+						foundPart = true
 						partNumbers = append(partNumbers, line[startSequence:endSequence+1])
-						continue
+
 					}
+
 				}
 
 				// check right most char
@@ -148,22 +188,28 @@ func processLine(lines []string) []string {
 					if checkSymbol(rightChar) {
 						fmt.Println("Sequence for rigjt char", startSequence, endSequence)
 
-						// TODO maybe error
-						partNumbers = append(partNumbers, line[startSequence:endSequence+1])
-						continue
+						if foundPart == false {
+							foundPart = true
+							partNumbers = append(partNumbers, line[startSequence:endSequence+1])
+						}
 					}
+
 				}
 
 				// check adjascent lines
-
 				for z := 1; z < len(lines); z++ {
 					matchLine := checkParentLine(lines[z], startSequence, endSequence)
 					if matchLine {
-						partNumbers = append(partNumbers, line[startSequence:endSequence+1])
-						continue
+						if foundPart == false {
+							partNumbers = append(partNumbers, line[startSequence:endSequence+1])
+						}
 					}
+
 				}
 
+				// adding the number range to the map
+				seq := []int{startSequence - 2, endSequence + 1}
+				numberSequences = append(numberSequences, seq)
 			}
 
 		}
@@ -172,16 +218,19 @@ func processLine(lines []string) []string {
 		break
 	}
 
-	return partNumbers
+	return partNumbers, numberSequences
 
 }
 
 func checkParentLine(text string, start int, end int) bool {
 
+	foundSymbol := false
+
 	for i := start; i <= end; i++ {
 		char := rune(text[i])
 		if checkSymbol(char) {
-			return true
+			foundSymbol = true
+
 		}
 	}
 
@@ -189,15 +238,26 @@ func checkParentLine(text string, start int, end int) bool {
 	if start-1 >= 0 {
 		char := rune(text[start-1])
 		if checkSymbol(char) {
-			return true
+			foundSymbol = true
+
 		}
 	}
 
 	if end+1 < len(text) {
 		char := rune(text[end+1])
 		if checkSymbol(char) {
-			return true
+			foundSymbol = true
+
 		}
+	}
+
+	return foundSymbol
+}
+
+func checkStar(c rune) bool {
+
+	if c == '*' {
+		return true
 	}
 
 	return false
