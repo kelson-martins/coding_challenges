@@ -109,7 +109,7 @@ func findGears(line string, currentLine int, mapa map[int][][]int, file []string
 				for _, nums := range content {
 					if j+1 >= nums[0] && j-1 <= nums[1] {
 						numberAttachedParts += 1
-						gears = append(gears, file[currentLine-1][nums[0]:nums[1]])
+						gears = append(gears, file[currentLine-1][nums[0]:nums[1]+1])
 						// fmt.Println("gear value", file[currentLine-1][nums[0]:nums[1]])
 					}
 				}
@@ -120,8 +120,8 @@ func findGears(line string, currentLine int, mapa map[int][][]int, file []string
 				for _, nums := range content {
 					if j+1 >= nums[0] && j-1 <= nums[1] {
 						numberAttachedParts += 1
-						gears = append(gears, file[currentLine+1][nums[0]:nums[1]])
-						fmt.Println("gear value", file[currentLine+1][nums[0]:nums[1]])
+						gears = append(gears, file[currentLine+1][nums[0]:nums[1]+1])
+						fmt.Println("gear value", file[currentLine+1][nums[0]:nums[1]+1])
 					}
 				}
 			}
@@ -235,7 +235,7 @@ func processLine(lines []string) ([]string, [][]int) {
 				}
 
 				// adding the number range to the map
-				seq := []int{startSequence, endSequence + 1}
+				seq := []int{startSequence, endSequence}
 				numberSequences = append(numberSequences, seq)
 			}
 
