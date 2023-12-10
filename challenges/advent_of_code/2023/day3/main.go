@@ -69,14 +69,13 @@ func main() {
 	// computing the gears
 
 	for k, line := range file {
-		findGears(line, k, sequencesPerLine)
-
+		findGears(line, k, sequencesPerLine, file)
 	}
 
 }
 
 // need to process only the first incoming line
-func findGears(line string, currentLine int, mapa map[int][][]int) {
+func findGears(line string, currentLine int, mapa map[int][][]int, file []string) {
 
 	for j := 0; j < len(line); j++ {
 
@@ -85,6 +84,7 @@ func findGears(line string, currentLine int, mapa map[int][][]int) {
 		// find the number to start the lookup
 		if checkStar(char) {
 			numberAttachedParts := 0
+			gears := []string{}
 			// found star, now needs to find adjascent
 
 			// 1. check same line left
@@ -92,6 +92,7 @@ func findGears(line string, currentLine int, mapa map[int][][]int) {
 				leftChar := rune(line[j-1])
 				if unicode.IsNumber(leftChar) {
 					numberAttachedParts += 1
+
 				}
 			}
 			// 1. check same line right
@@ -102,6 +103,32 @@ func findGears(line string, currentLine int, mapa map[int][][]int) {
 				}
 			}
 
+			// check previous line
+			content, ok := mapa[currentLine-1]
+			if ok {
+				for _, nums := range content {
+					if j+1 >= nums[0] && j-1 <= nums[1] {
+						numberAttachedParts += 1
+						gears = append(gears, file[currentLine-1][nums[0]:nums[1]])
+						// fmt.Println("gear value", file[currentLine-1][nums[0]:nums[1]])
+					}
+				}
+			}
+			// check next line
+			content, ok = mapa[currentLine+1]
+			if ok {
+				for _, nums := range content {
+					if j+1 >= nums[0] && j-1 <= nums[1] {
+						numberAttachedParts += 1
+						gears = append(gears, file[currentLine+1][nums[0]:nums[1]])
+						fmt.Println("gear value", file[currentLine+1][nums[0]:nums[1]])
+					}
+				}
+			}
+
+			if numberAttachedParts == 2 {
+				fmt.Println(gears)
+			}
 		}
 	}
 
@@ -208,7 +235,7 @@ func processLine(lines []string) ([]string, [][]int) {
 				}
 
 				// adding the number range to the map
-				seq := []int{startSequence - 2, endSequence + 1}
+				seq := []int{startSequence, endSequence + 1}
 				numberSequences = append(numberSequences, seq)
 			}
 

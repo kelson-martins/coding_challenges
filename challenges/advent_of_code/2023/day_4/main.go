@@ -13,6 +13,13 @@ func main() {
 	file, _ := readLines("input.txt")
 
 	totalPoints := 0
+	totalCards := map[int]int{}
+
+	// initialize the first ownership of card
+	for card, _ := range file {
+		totalCards[card+1] = 1
+	}
+
 	for card, line := range file {
 
 		splitCard := strings.Split(line, "|")
@@ -52,7 +59,9 @@ func main() {
 			}
 		}
 
+		// Calculating Points for Part 1
 		linePoints := 0
+		lineMatches := 0
 		for _, w := range winningNumbersSlice {
 			for _, p := range playerNumbersSlice {
 				if p == w {
@@ -61,21 +70,42 @@ func main() {
 					} else {
 						linePoints++
 					}
-
+					lineMatches++
 				}
 			}
 		}
 
-		// break
-		fmt.Println("card", card+1, "points", linePoints)
+		// Calculating extra cards for part 2
+		// start at pos 1 as the current card dont get extra
+		if card == 0 {
+			for i := 1; i <= lineMatches; i++ {
+
+				if card < len(file) { // stop appending if past size
+					totalCards[card+1+i] += 1
+				}
+
+			}
+		} else {
+			for j := 0; j < totalCards[card+1]; j++ {
+				for k := 1; k <= lineMatches; k++ {
+					if card < len(file) { // stop appending if past size
+						totalCards[card+1+k] += 1
+					}
+				}
+			}
+		}
+
+		// fmt.Println("card", card+1, "points", linePoints)
+		// fmt.Println("card", card+1, "mathinc numbers", lineMatches)
 		totalPoints += linePoints
 	}
 
-	fmt.Println(totalPoints)
-
-}
-
-func getPoints() {
+	totalSumCards := 0
+	for card, _ := range file {
+		totalSumCards += totalCards[card+1]
+	}
+	fmt.Println("Part 1 total points:", totalPoints)
+	fmt.Println("Part 2 total cards:", totalSumCards)
 
 }
 
