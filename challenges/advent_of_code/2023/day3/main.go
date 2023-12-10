@@ -67,15 +67,19 @@ func main() {
 	fmt.Println("sum of part numbers: ", sum)
 
 	// computing the gears
-
+	totalGearRatio := 0
 	for k, line := range file {
-		findGears(line, k, sequencesPerLine, file)
+		totalGearRatio += findGears(line, k, sequencesPerLine, file)
 	}
+
+	fmt.Println("total gear ratio:", totalGearRatio)
 
 }
 
 // need to process only the first incoming line
-func findGears(line string, currentLine int, mapa map[int][][]int, file []string) {
+func findGears(line string, currentLine int, mapa map[int][][]int, file []string) int {
+
+	gearRatio := 0
 
 	for j := 0; j < len(line); j++ {
 
@@ -92,7 +96,17 @@ func findGears(line string, currentLine int, mapa map[int][][]int, file []string
 				leftChar := rune(line[j-1])
 				if unicode.IsNumber(leftChar) {
 					numberAttachedParts += 1
+					// iterate over the map of the line to get the number
 
+					mapLineNums := mapa[currentLine]
+					for idx, nums := range mapLineNums {
+						if j-1 == nums[1] {
+							// fmt.Println(mapa[currentLine][idx])
+							gears = append(gears, line[mapa[currentLine][idx][0]:mapa[currentLine][idx][1]+1])
+							// fmt.Println("found adj", gears, line[mapa[currentLine][idx][0]:mapa[currentLine][idx][1]+1])
+							break
+						}
+					}
 				}
 			}
 			// 1. check same line right
@@ -100,6 +114,16 @@ func findGears(line string, currentLine int, mapa map[int][][]int, file []string
 				rightChar := rune(line[j+1])
 				if unicode.IsNumber(rightChar) {
 					numberAttachedParts += 1
+
+					mapLineNums := mapa[currentLine]
+					for idx, nums := range mapLineNums {
+						if j+1 == nums[0] {
+							// fmt.Println(mapa[currentLine][idx])
+							gears = append(gears, line[mapa[currentLine][idx][0]:mapa[currentLine][idx][1]+1])
+							// fmt.Println("found right adj", gears, line[mapa[currentLine][idx][0]:mapa[currentLine][idx][1]+1])
+							break
+						}
+					}
 				}
 			}
 
@@ -121,16 +145,31 @@ func findGears(line string, currentLine int, mapa map[int][][]int, file []string
 					if j+1 >= nums[0] && j-1 <= nums[1] {
 						numberAttachedParts += 1
 						gears = append(gears, file[currentLine+1][nums[0]:nums[1]+1])
-						fmt.Println("gear value", file[currentLine+1][nums[0]:nums[1]+1])
+						// fmt.Println("gear value", file[currentLine+1][nums[0]:nums[1]+1])
 					}
 				}
 			}
 
 			if numberAttachedParts == 2 {
-				fmt.Println(gears)
+				// fmt.Println(gears)
+
+				v1, err := strconv.Atoi(gears[0])
+				v2, err1 := strconv.Atoi(gears[1])
+				if err != nil || err1 != nil {
+					log.Fatalln("error converting string to int")
+				}
+
+				gearRatio += v1 * v2
+
 			}
 		}
 	}
+
+	if gearRatio > 0 {
+		fmt.Println("ratio found:", gearRatio)
+	}
+
+	return gearRatio
 
 }
 
