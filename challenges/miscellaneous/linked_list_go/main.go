@@ -13,43 +13,55 @@ type LinkedList struct {
 
 func main() {
 
-	list := &LinkedList{}
-
-	list.addNode(3)
-	list.addNode(5)
-	list.showNodes()
-}
-
-func (l *LinkedList) showNodes() {
-
-	first := l.head
-	if first != nil {
-		fmt.Println(first.value)
-
-		for first.next != nil {
-			first = first.next
-			fmt.Println(first.value)
-		}
+	n1 := &Node{
+		value: 1,
 	}
+
+	n1.next = &Node{
+		value: 2,
+	}
+
+	list := &LinkedList{
+		head: n1,
+	}
+
+	list.printList()
+
+	list.addNode(4)
+	list.printList()
+
 }
 
-func (l *LinkedList) addNode(v int) {
+func (l *LinkedList) addNode(value int) {
 
-	current := l.head
+	currentNode := l.head
+	for currentNode.next != nil {
+		currentNode = currentNode.next
+	}
 
+	// here means we reached the last so we can set the next Node
 	newNode := &Node{
-		value: v,
+		value: value,
 		next:  nil,
 	}
 
-	if current == nil {
-		current = newNode
-		return
+	currentNode.next = newNode
+}
+
+func (n *LinkedList) printList() {
+
+	currentNode := n.head
+
+	for {
+		fmt.Println(currentNode.value)
+
+		if currentNode.next == nil {
+			fmt.Println("End of the list")
+			return
+		}
+
+		currentNode = currentNode.next
+
 	}
 
-	for current.next != nil {
-		current = current.next
-	}
-
-	current.next = newNode
 }
