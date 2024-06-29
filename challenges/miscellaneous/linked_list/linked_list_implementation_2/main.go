@@ -52,6 +52,29 @@ func (l *linkedList) delete(valueToDelete int, allOccurrences bool) {
 
 }
 
+// removing duplicates in O(n) by using a map
+func (l *linkedList) removeDuplicate() {
+
+	listUniqueValues := make(map[int]bool)
+
+	var previous *node
+	current := l.node
+
+	for current != nil {
+
+		if _, ok := listUniqueValues[current.value]; ok {
+			// here the item exists in the map so its a duplicate
+			previous.next = current.next // jumping the duplicate
+		} else {
+			// not a duplicate
+			listUniqueValues[current.value] = true
+			previous = current
+		}
+
+		current = current.next
+	}
+}
+
 func (l *linkedList) add(value int) {
 
 	newNode := &node{
@@ -74,13 +97,14 @@ func main() {
 		last: node,
 	}
 
+	list.add(5)
+	list.add(3)
 	list.add(4)
+	list.add(10)
+	list.removeDuplicate()
 	list.print()
-	list.add(6)
 	list.add(10)
 	list.print()
-	list.delete(6, false)
-	list.print()
-	list.delete(4, false)
+	list.removeDuplicate()
 	list.print()
 }
